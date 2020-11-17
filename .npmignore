@@ -1,0 +1,8 @@
+/node_modules
+/public
+/src
+babel.config.js
+package.json
+README.md
+vue.config.js
+yarn.lock
