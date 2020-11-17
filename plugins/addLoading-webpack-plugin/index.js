@@ -10,6 +10,7 @@ class addLoadingPlugin {
     this.autoRemove = autoRemove
     this.html = this.defaultHtml(className)
     this.css = this.defaultCss(className)
+    this.js = this.defaultJs()
   }
   addFileToWebpackOutput(compilation, filename, fileContent) {
     compilation.assets[filename] = {
@@ -76,6 +77,33 @@ class addLoadingPlugin {
     `
     )
   }
+  defaultJs () {
+    return (
+    `
+    var loaderFn = function() {
+      var $id = document.getElementById("${this.id}")
+      if ($id) {
+        $id.parentNode && ($id.parentNode.removeChild($id))
+      }
+    }
+    // 如果有自动移除
+    if (${this.autoRemove}) {
+      if (!window.addEventListener) {
+        setTimeout(function() {
+          loaderFn()
+        }, 500)
+      } else {
+        window.addEventListener('load', loaderFn, false)
+      }
+    } else {
+      // 手动移除
+      window.removeLoading = function() {
+        loaderFn()
+      }
+    }
+    `
+    )
+  }
   apply (compiler) {
     compiler.plugin('emit', (compilation, callback) => {
       for (let file in compilation.assets) {
@@ -83,35 +111,15 @@ class addLoadingPlugin {
           let htmlStr = compilation.assets[file].source()
           htmlStr = htmlStr.replace('<head>', `
             <head>
-              ${this.html}
+              ${this.html.replace(/\s{2,}/g, '')}
           `)
           htmlStr = htmlStr.replace('<head>', `
             <head>
               <style type="text/css">
-                ${this.css}
+                ${this.css.replace(/\s{2,}/g, '')}
               </style>
               <script>
-              var loaderFn = function() {
-                var $id = document.getElementById("${this.id}")
-                if ($id) {
-                  $id.parentNode && ($id.parentNode.removeChild($id))
-                }
-              }
-              // 如果有自动移除
-              if (${this.autoRemove}) {
-                if (!window.addEventListener) {
-                  setTimeout(function() {
-                    loaderFn()
-                  }, 500)
-                } else {
-                  window.addEventListener('load', loaderFn, false)
-                }
-              } else {
-                // 手动移除
-                window.removeLoading = function() {
-                  loaderFn()
-                }
-              }
+                ${this.js}
               </script>
           `)
           this.addFileToWebpackOutput(compilation, file, htmlStr)
