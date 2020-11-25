@@ -1,13 +1,18 @@
 {
-  "name": "add-loading-webpack-plugin",
-  "version": "0.1.4",
+  "name": "@weiyi/add-loading-webpack-plugin",
+  "version": "0.1.0",
   "scripts": {
     "serve": "vue-cli-service serve",
     "dev": "npm run serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
+  "author": "huanghui5",
   "dependencies": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "xx"
   },
   "devDependencies": {
     "core-js": "^3.6.5",
