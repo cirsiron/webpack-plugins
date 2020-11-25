@@ -1,6 +1,6 @@
 {
   "name": "@weiyi/add-loading-webpack-plugin",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "scripts": {
     "serve": "vue-cli-service serve",
     "dev": "npm run serve",
